@@ -9,7 +9,7 @@ The dataset used in this project is publicly available at https://archive.ics.uc
 
 The objective of this project is to create a model that predicts the final grades (G3) of students using various features. These features include students' study habits, alcohol consumption, absences, and first and second period grades (G1, G2).
 
-#Methodology
+## Methodology
 
 1. T-Tests and Regression Analysis were conducted to evaluate the impact of various predictors on students' final grades.
 2. Model Selection was performed using regsubsets and AIC to find the best predictors while avoiding overfitting.
