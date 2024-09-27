@@ -1,0 +1,87 @@
+---
+title: "Modelling"
+output: pdf_document
+date: "2024-09-27"
+---
+# R code for Preliminary Data Analysis
+```{r}
+hist(datapor$G3, main = "Data Distribution of Final Grades (G3)", xlab = "G3" ) #plot1
+hist(datapor$G1, main = "Data distribution of G1", xlab = "G1" ) #plot2
+ggplot(datapor, aes(G1, G3)) +
+  +  geom_jitter(position = position_jitter(width = .1)) + geom_point(color = "blue") #plot3
+hist(datapor$G2, main = "Data distribution of G2", xlab = "G2" ) #plot4
+ggplot(datapor, aes(G2, G3)) +
+  +    geom_jitter(position = position_jitter(width = .1)) + geom_point(color = "#52854C") #plot5
+
+```
+
+
+# R code for Data Analysis
+```{r}
+# regsubset for model selection
+s <- regsubsets(project306.G3 ~., data=project306_subset, method="exhaustive")
+ss = (summary(s))
+ss$adjr2
+ss$cp
+ss$rsq
+ss
+```
+
+```{r}
+# to get AIC for each model
+AIC(lm(project306.G3 ~ project306.G2))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2, data=project306_subset))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences, data=project306_subset))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc, data=project306_subset))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc + project306.studytime, data=project306_subset))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc + project306.studytime + project306.higher, data=project306_subset))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc + project306.studytime + project306.higher + project306.schoolsup, data=project306_subset))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc + project306.studytime + project306.higher + project306.schoolsup + project306.goout, data=project306_subset))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc + project306.studytime + project306.higher + project306.schoolsup, data=project306_subset))
+
+AIC(lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc + project306.studytime + project306.higher + project306.schoolsup + project306.goout, data=project306_subset))
+
+# Cp plot codes
+size <-as.numeric(rownames(ss$which))
+plot(size, ss$cp, xlab = "p", ylab = "Cp", ylim=c(0,26))
+abline(0,1)
+
+# regression codes
+project306_reg = lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc + project306.studytime, data=project306_subset)
+summary(project306_reg)
+project306_reg2 = lm(project306.G3 ~ project306.G1 + project306.G2 + project306.absences + project306.Dalc, data=project306_subset)
+summary(project306_reg2)
+
+```
+
+```{r}
+# Graphing G3 vs absences and G3 vs studytime
+por <- student.por
+absences <- por$absences
+G3 < por$G3
+
+library(ggplot2)
+library(dplyr)
+library(gapminder)
+ggplot(por, aes(x=as.factor(studytime), y=G3)) + geom_boxplot(fill="slateblue", alpha=0.2)
+ggplot(por, aes(x=as.factor(absences), y=G3)) + geom_boxplot(fill="slateblue", alpha=0.2)
+plot(absences, G3)
+plot(studytime, G3)
+lm(G3 ~ absences)
+lm(G3 ~ studytime)
+
+# model 5 residuals
+plot(fitted(model5),resid(model5))
+summary(model5)
+
+```
+
+
